@@ -1,0 +1,49 @@
+[
+  {
+    "date": "2025-11-09",
+    "start_time": "08:00:00",
+    "end_time": "18:00:00",
+    "pause_minutes": 0.0,
+    "project_entries": [
+      {
+        "project_name": {
+          "code": "INEK",
+          "allocation": 1.0
+        },
+        "hours": 3.5,
+        "activity": "I run a test"
+      }
+    ]
+  },
+  {
+    "date": "2025-11-12",
+    "start_time": "07:00:00",
+    "end_time": "17:00:00",
+    "pause_minutes": 1.0,
+    "project_entries": []
+  },
+  {
+    "date": "2025-11-13",
+    "start_time": "07:30:00",
+    "end_time": "17:00:00",
+    "pause_minutes": 0.5,
+    "project_entries": [
+      {
+        "project_name": {
+          "code": "NLS",
+          "allocation": 0.5
+        },
+        "hours": 5.0,
+        "activity": "I tested some stuff"
+      },
+      {
+        "project_name": {
+          "code": "CZCL",
+          "allocation": 0.5
+        },
+        "hours": 4.0,
+        "activity": "I put some data into salesforce"
+      }
+    ]
+  }
+]

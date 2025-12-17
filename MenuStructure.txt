@@ -1,0 +1,16 @@
+Main Menu:
+├── Log Time
+│   ├── Select Project
+│   ├── Select Week
+│   └── Enter Hours
+├── View/Edit Hours
+│   ├── By Project
+│   ├── By Week
+│   └── Edit Entry
+├── Projects
+│   ├── Add Project
+│   ├── List Projects
+│   └── Remove Project
+└── Reports
+    ├── Monthly Summary
+    └── Project Totals
