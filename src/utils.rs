@@ -1,3 +1,4 @@
+use std::intrinsics::unreachable;
 //use std::fmt::Display;
 use std::vec;
 
@@ -175,37 +176,37 @@ pub fn pause_minutes() -> Result<Option<f64>> {
     let pause_options = vec!["0.5", "0.75", "1", "Custom"];
     let prompt = "How long was your pause today?";
 
-    prompt_select(prompt, 
-        pause_options,
-        |s| match s {
-            "0.5" => 0.5,
-            "0.75" => 0.75,
-            "1" => 1.0,
-            "Custom" => {
-                let pause_t = CustomType::<f64>::new("Please enter a number (time quarter)")
-                    .with_help_message("Type something like 0.5, 0.75, 1 etc.")
-                    .with_error_message("Please type in a valid number! (0.5, 0.75, 1.0)")
-                    .with_validator(|input: &f64|{
-                        if (input * 4.0).fract() == 0.0 {
-                            Ok(Validation::Valid)
-                        } else {
-                            Ok(Validation::Invalid(
-                                "Pause must be in 0.25 hour increments".into()
-                            ))
-                        }
-                    }).prompt_skippable();
-                
-                match pause_t {
-                    Ok(Some(pause)) => {
-                        let result =  ((pause / 60.0) * 4.0).round() / 4.0;
-                        println!("Your pause was {} hours long", result);
-                        return result;
-                    },
-                    Ok(None) => return Ok(None),
-                    Err(e) => return Err(e.into())
-                };
+    let pause_t = Select::new(prompt, pause_options).prompt_skippable()?;
+
+    match pause_t {
+        Some("0.5") => return Ok(Some(0.5)),
+        Some("0.75") => return Ok(Some(0.75)),
+        Some("1") => return Ok(Some(1.0)),
+        Some("Custom") => {
+            let pause_custom = CustomType::<f64>::new("Please enter a number (time quarter)")
+                .with_help_message("Type something like 0.5, 0.75, 1 etc.")
+                .with_error_message("Please type in a valid number! (0.5, 0.75, 1.0)")
+                .with_validator(|input: &f64|{
+                    if (input * 4.0).fract() == 0.0 {
+                        Ok(Validation::Valid)
+                    } else {
+                        Ok(Validation::Invalid(
+                            "Pause must be in 0.25 hour increments".into()
+                        ))
+                    }
+                }).prompt_skippable()?;
+
+            match pause_custom {
+                Some(pause) =>{
+                    return Ok(Some(((pause / 60.0) * 4.0).round() /4.0));
+                },
+                None => return Ok(None),
             }
-        })
+        },
+        None => return Ok(None),
+        Some(_) => unreachable!(),
+
+    };
 
 
 
