@@ -207,46 +207,6 @@ pub fn pause_minutes() -> Result<Option<f64>> {
         Some(_) => unreachable!(),
 
     };
-
-
-
-    /* 
-    match Select::new("How long was your pause today?", pause_options).prompt() { // TODO: If let Ok(ans) = Select::new[...] probably better choice her
-        Ok(ans) => {
-            match ans {
-                "0.5" => return Ok(Some(0.5)),
-                "0.75" => return Ok(Some(0.75)),
-                "1" => return Ok(Some(1.0)),
-                "Custom" => {
-
-                    let pause_t = CustomType::<f64>::new("Please enter a custom number: ")
-                        .with_error_message("Please type in a valid number!")
-                        .with_help_message("Type something like '30' for 0.5 or '45' for 0.75 minutes!")
-                        .prompt();
-
-                    match pause_t {
-
-                        Ok(pause_t) => {
-                            let result =  ((pause_t / 60.0) * 4.0).round() / 4.0;
-                            println!("Your pause was {} hours long", result);
-                            return Ok(Some(result));
-                        },
-                        Err(_) => {println!("We could not process your pause time! Defaulting to 0.5 hours!");
-                                    return Ok(Some(0.5));},
-                        
-                    }
-                    
-                }, 
-            };
-        },
-        Err(InquireError::OperationCanceled) | Err(InquireError::OperationInterrupted) => {
-            println!("Operation cancelled. Returning to main...");
-            return Ok(None)
-        },
-        Err(e)=> return Err(e.into()),
-    };
-    */
-
     
 }
 
