@@ -1,4 +1,4 @@
-use std::intrinsics::unreachable;
+//use std::intrinsics::unreachable;
 //use std::fmt::Display;
 use std::vec;
 
@@ -8,7 +8,7 @@ use inquire::{CustomType, DateSelect, Select, Text, validator::Validation, Confi
 use crate::models::{TimeRecord, Project, ProjectEntry};
 //use crate::storage::*;
 use crate::models::*;
-use anyhow::{Result, anyhow};
+use anyhow::{Context, Result, anyhow};
 
 
 /// Error handling when user hits esc:
@@ -391,7 +391,14 @@ pub fn clear_screen() {
 /// Edit the Project Entries in a TimeRecord
 pub fn edit_workday_record(config: &mut Config) -> Result<()> {    
 
-    let (selected_date, _) = choose_date(config, "For what date would you like to edit the entries?")?;
+    let (selected_date, _) = match choose_date(config, "For what date would you like to edit the entries?") {
+        Ok(Some(value)) => value,
+        Ok(None) => {
+            println!("Operation cancelled. Returning to main...");
+            return Ok(());
+        },
+        Err(e) => return Err(e)
+    };
 
     if let Some(record) = config.time_records.iter_mut().find(|r| r.date == selected_date) {
         /* Could be written as:
