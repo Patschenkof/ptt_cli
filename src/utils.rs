@@ -411,6 +411,12 @@ pub fn edit_workday_record(config: &mut Config) -> Result<()> {
                 );  
          */
 
+        if record.project_entries.is_empty() {
+            println!("Currently no project records for {}. Please enter a record first!\n", selected_date);
+            println!("Returning to main...");
+            return Ok(());
+        }
+
          // Print the user, what he has allocated and what he has done in a project
          println!("These are the records for the selected date: {}", selected_date);
          println!("\n");
