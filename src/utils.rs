@@ -164,7 +164,7 @@ pub fn record_time_record(config: &mut Config) -> Result<()> {
 pub fn record_time(prompt: &str) -> Result<Option<NaiveTime>> {
 
     prompt_parse(prompt, |s| {
-        NaiveTime::parse_from_str(s, "%H%M")
+        NaiveTime::parse_from_str(s, "%H:%M")
             .map_err(|_| "Please put in a valid time like 08:00".to_string())
     })
 
