@@ -60,7 +60,14 @@ pub fn log_time_menu(config: &mut Config) -> Result<()> {
                 "Record Project Work" => record_project_work(config)?,
                 "Edit Workday Record" => edit_workday_record(config)?,
                 "Delete Workday" => {
-                    let (selected_date, _) = choose_date(config, "Which record would you like to delete?")?;
+                    let (selected_date, _) = match choose_date(config, "Which record would you like to delete?") {
+                        Ok(Some(value)) => value,
+                        Ok(None) => {
+                            println!("Operation cancelled. Returning to main...");
+                            return Ok(());
+                        },
+                        Err(e) => return Err(e),
+                    };
                     config.delete_time_record(selected_date)?;
                 },
                 "Back" => break Ok(()),
