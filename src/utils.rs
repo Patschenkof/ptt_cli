@@ -435,8 +435,16 @@ pub fn edit_workday_record(config: &mut Config) -> Result<()> {
             .map(|p|p.project_name.code.clone())
             .collect();
 
-         let select_pcode = Select::new("Which Project entry would you like to edit?",
-            vec_pcodes).prompt()?;
+         let select_pcode = match Select::new("Which Project entry would you like to edit?",
+            vec_pcodes).prompt() {
+                Ok(value) => value,
+                Err(InquireError::OperationCanceled) | Err(InquireError::OperationInterrupted) => {
+                    println!("Operation cancelled. Returning to main...");
+                    return Ok(());
+                },
+                Err(e) => return Err(e.into()),
+            };
+
         
         if let Some(project) = record.project_entries
         // s.o.
