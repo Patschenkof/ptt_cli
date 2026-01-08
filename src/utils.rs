@@ -248,11 +248,12 @@ pub fn record_project_work(config: &mut Config) -> Result<()>{
 
         // Retrieve the already assigned hous for the workday
         let assigned_hours = match get_activity_hours(&time_record_ans, &config.time_records) {
-            Ok(assigned_hours) => assigned_hours,
-            Err(err) => {
-                println!("Returning to menu");    
-                break Err(err); 
-            },
+            Ok(Some(assigned_hours)) => assigned_hours,
+            Ok(None) => {
+                println!("Operation cancelled. Returning to main...");
+                return Ok(());
+            }
+            Err(e) => return Err(e.into()),
         };
 
         // Ask the user for his activities in the poject
