@@ -229,7 +229,14 @@ pub fn record_project_work(config: &mut Config) -> Result<()>{
             Err(e) => return Err(e)
         };
         
-        let proj_ans = choose_project(&config.project_records, "For what project would you like to record an activity?")?;
+        let proj_ans = match choose_project(&config.project_records, "For what project would you like to record an activity?"){
+            Ok(Some(project_entry)) => project_entry,
+            Ok(None) => {
+                println!("Operation cancelled. Returning to main...");
+                return Ok(());
+            },
+            Err(e) => return Err(e)
+        };
 
         // Get the stored Project struct
         let single_proj = match find_project(&config.project_records, &proj_ans){
@@ -280,7 +287,7 @@ pub fn record_project_work(config: &mut Config) -> Result<()>{
 
 /// Function to prompt the user for the remaining time. 
 /// Adding the date entry and the project, this function will list possible working hours, so that you do not exceed the days amount of work 
-pub fn get_activity_hours(date: &NaiveDate, time_record: &Vec<TimeRecord>) -> Result<f64> {
+pub fn get_activity_hours(date: &NaiveDate, time_record: &Vec<TimeRecord>) -> Result<Option<f64>> {
 
 
     let remaining_hours = time_record
@@ -289,7 +296,8 @@ pub fn get_activity_hours(date: &NaiveDate, time_record: &Vec<TimeRecord>) -> Re
     .expect("No Hours found for this date!");
 
     if remaining_hours == 0.0 {
-        return Err(anyhow!("No hours left to record :("));
+        println!("No hours left to record :(");
+        return Ok(None);
     }
 
     println!("You have {} hours at your disposal. How much would you like to assign?", remaining_hours);
@@ -304,10 +312,10 @@ pub fn get_activity_hours(date: &NaiveDate, time_record: &Vec<TimeRecord>) -> Re
             .prompt();
         let assigned_hours = match assigned_hours {
             Ok(assigned_hours) => assigned_hours,
-            Err(err) => {
-                println!("An error occured: {}", err);
-                return Err(err.into());
-            }
+            Err(InquireError::OperationCanceled) | Err(InquireError::OperationInterrupted) => {
+                return Ok(None);
+            },
+            Err(e) => return Err(e.into()),
         };
 
         if assigned_hours == 0.0 {
@@ -322,7 +330,7 @@ pub fn get_activity_hours(date: &NaiveDate, time_record: &Vec<TimeRecord>) -> Re
         
     };
     
-    return Ok(assigned_hours);
+    return Ok(Some(assigned_hours));
 
 
 
@@ -544,10 +552,8 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
 
     let proj_entry = match Select::new(prompt, vec_of_strings).prompt(){
         Ok(project_entry)=> project_entry,
-        Err(InquireError::OperationCanceled) | Err(InquireError::OperationInterrupted) => {
-            println!("Operation cancelled. Returning to main...");
-            return Ok(None);
-        },
+        Err(InquireError::OperationCanceled) | Err(InquireError::OperationInterrupted) => 
+            return Ok(None),
         Err(e) => return Err(e.into()),
     };
 
