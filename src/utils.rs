@@ -558,7 +558,7 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
         Err(e) => return Err(e.into()),
     };
 
-    return Ok(Some(proj_entry);)
+    return Ok(Some(proj_entry));
 }
 
 /// Function iterates over the project codes of a set date. So the user will not be able to prompt a project code
