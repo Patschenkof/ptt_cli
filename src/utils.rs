@@ -533,7 +533,7 @@ pub fn list_projects(config: &Config) -> Result<()> {
 }
 
 /// Iterates over all stored projects. The user can thus freely choose, for what code he want to add an activity
-pub fn choose_project(projects: &[Project], prompt: &str) -> Result<String> {
+pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<String>> {
 
     if projects.is_empty() {
         println!("Currently no stored projects.");
@@ -542,9 +542,16 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<String> {
 
     let vec_of_strings: Vec<String> = projects.iter().map(|p| p.code.clone()).collect();
 
-    let proj_entry = Select::new(prompt, vec_of_strings).prompt()?;
+    let proj_entry = match Select::new(prompt, vec_of_strings).prompt(){
+        Ok(project_entry)=> project_entry,
+        Err(InquireError::OperationCanceled) | Err(InquireError::OperationInterrupted) => {
+            println!("Operation cancelled. Returning to main...");
+            return Ok(None);
+        },
+        Err(e) => return Err(e.into()),
+    };
 
-    return Ok(proj_entry);
+    return Ok(Some(proj_entry);)
 }
 
 /// Function iterates over the project codes of a set date. So the user will not be able to prompt a project code
