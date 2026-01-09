@@ -338,7 +338,8 @@ pub fn get_activity_hours(date: &NaiveDate, time_record: &Vec<TimeRecord>) -> Re
 }
 
 /// Prompts the user on how many hours he wants to assign to a specific task for a project
-pub fn input_hours() -> Result<f64> {
+/// DELETE?
+/*pub fn input_hours() -> Result<f64> {
 
     let input: f64 = CustomType::new("How many hours would you like to assign?: ")
         .with_error_message("Please provide a number like 0.5, 1.0, 2.5 etc.")
@@ -346,7 +347,7 @@ pub fn input_hours() -> Result<f64> {
 
     return Ok(input);
 
-}
+}*/
 
 /// Asks the user for the Project information. Calls Config.add_project() to add data to permanent storage
 pub fn add_project(config: &mut Config)-> Result<()>{
