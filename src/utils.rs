@@ -362,12 +362,28 @@ pub fn add_project(config: &mut Config)-> Result<()>{
             } else {
                 Ok(Validation::Invalid("Code can only be 5 characters long!".into()))
             }
-        }).prompt()?;
+        }).prompt_skippable()?;
+
+        let code  = match code {
+            Some(code ) => code,
+            None => {
+                println!("Operation cancelled. Returning to main..."),
+                return Ok(());
+            }
+        };
 
         let allocation = CustomType::<f64>::new("To what degree have you been allocated to the project?")
             .with_error_message("Please type in a valid value (0.1, 0.2, 0.5 etc.")
             .with_help_message("Type in a percantage like '0.5'")
-            .prompt()?;
+            .prompt_skippable()?;
+
+        let allocation = match allocation {
+            Some(allocation) => allocation,
+            None => {
+                println!("Operation cancelled. Returning to main...");
+                return Ok(());
+            }
+        };
 
 
         if !config.project_records.iter().any(|p| p.code == code) {
