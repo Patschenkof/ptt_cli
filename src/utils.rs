@@ -482,8 +482,16 @@ pub fn edit_workday_record(config: &mut Config) -> Result<()> {
                 .with_default(project.hours)
                 .with_error_message("Please type in a valid number")
                 .with_help_message("Valid format are 0.5, 1.0, 3.5 etc")
-                .prompt()
+                .prompt_skippable()
                 .with_context(|| format!("Failed to assign hours for Project: {:#?}", project.project_name.code))?;
+
+            let assigned_hours = match assigned_hours {
+                Some(hours) => hours,
+                None => {
+                    println!("Operation cancelled. Returning to main...");
+                    return Ok(())
+                }
+            };
 
             let activity = Text::new("What did you do?")
                 .with_default(&project.activity)
@@ -494,8 +502,16 @@ pub fn edit_workday_record(config: &mut Config) -> Result<()> {
                         Ok(Validation::Invalid("Activity should be no longer than 500 characters!".into()))
                     }
                 })
-                .prompt()
+                .prompt_skippable()
                 .with_context(|| format!("Failed to assign activity for Project: {:#?}",project.project_name.code))?;
+
+            let activity = match activity {
+                Some(activity) => activity,
+                None => {
+                    println!("Operation cancelled. Returning to main...");
+                    return Ok(());
+                }
+            };
 
             // Todo: Overwrite Entry with the new information!
 
