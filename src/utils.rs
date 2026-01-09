@@ -367,7 +367,7 @@ pub fn add_project(config: &mut Config)-> Result<()>{
         let code  = match code {
             Some(code ) => code,
             None => {
-                println!("Operation cancelled. Returning to main..."),
+                println!("Operation cancelled. Returning to main...");
                 return Ok(());
             }
         };
@@ -596,7 +596,8 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
 
 /// Function iterates over the project codes of a set date. So the user will not be able to prompt a project code
 /// where there are no entries to that specific date
-pub fn choose_project_for_date(time_records: &Vec<TimeRecord>, search_date: &NaiveDate, prompt: &str) -> Result<(String, TimeRecord)> {
+/// DELETE?
+/*pub fn choose_project_for_date(time_records: &Vec<TimeRecord>, search_date: &NaiveDate, prompt: &str) -> Result<(String, TimeRecord)> {
 
     if let Some(tr) = time_records.iter().find(|r| &r.date == search_date){
 
@@ -610,7 +611,7 @@ pub fn choose_project_for_date(time_records: &Vec<TimeRecord>, search_date: &Nai
         return Err(anyhow!("No entry for this date"));
     }
 
-}
+}*/
 
 
 
