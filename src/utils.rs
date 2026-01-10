@@ -598,9 +598,9 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
     return Ok(Some(proj_entry));
 }
 
-/// Function iterates over the project codes of a set date. So the user will not be able to prompt a project code
-/// where there are no entries to that specific date
-/// DELETE?
+// Function iterates over the project codes of a set date. So the user will not be able to prompt a project code
+// where there are no entries to that specific date
+// DELETE?
 /*pub fn choose_project_for_date(time_records: &Vec<TimeRecord>, search_date: &NaiveDate, prompt: &str) -> Result<(String, TimeRecord)> {
 
     if let Some(tr) = time_records.iter().find(|r| &r.date == search_date){
