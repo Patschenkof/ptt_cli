@@ -582,7 +582,7 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
         return Err(anyhow!("No stored projects"));
     }
 
-    let mut vec_of_strings: Vec<String> = projects.iter_mut().map(|p| p.code.clone()).collect();
+    let mut vec_of_strings: Vec<String> = projects.iter().map(|p| p.code.clone()).collect();
 
     vec_of_strings.push(String::from("INT"));
     vec_of_strings.push(String::from("Vacation"));
