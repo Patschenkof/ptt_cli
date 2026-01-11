@@ -136,5 +136,6 @@ pub fn view_edit_menu(config:&mut Config) -> Result<()>{
 
 pub fn reports_menu() -> Result<()>{
     println!("TBD! Print some reports");
+    base_report();
     return Ok(());
 }

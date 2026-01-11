@@ -2,7 +2,7 @@
 //use std::fmt::Display;
 use std::vec;
 
-use chrono::{Local, NaiveDate, NaiveTime, Weekday};
+use chrono::{Datelike, Local, NaiveDate, NaiveTime, Weekday};
 use inquire::InquireError;
 use inquire::{CustomType, DateSelect, Select, Text, validator::Validation, Confirm};
 use crate::models::{TimeRecord, Project, ProjectEntry};
@@ -617,5 +617,19 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
 
 }*/
 
+fn base_report() -> Result<()> {
+    // get current month
 
+    let month = NaiveDate::from(Local::now().date_naive()).month();
+
+    println!("Month: {}", month);
+
+    // iterate over projects and hours of the current mont
+
+    // format and print for each project
+
+    return Ok(());
+
+
+}
 
