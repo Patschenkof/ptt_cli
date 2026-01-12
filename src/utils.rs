@@ -620,9 +620,13 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
 pub fn base_report(config: &Config) -> Result<()> {
     // get current month
 
-    let month = NaiveDate::from(Local::now().date_naive()).month();
+    let month = NaiveDate::from(Local::now().date_naive()).month(); // Returns the month number starting from 1.
 
     println!("Month: {}", month);
+
+    let vec_of_projects: Vec<String> = config.project_records.iter().map(|p_code| p_code.code.clone()).collect();
+
+    let relevant_t_records = config.time_records.iter().find(|t_record| t_record.date.month() == month);
 
     // iterate over projects and hours of the current mont
 
