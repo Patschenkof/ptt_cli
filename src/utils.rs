@@ -617,7 +617,7 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
 
 }*/
 
-fn base_report() -> Result<()> {
+pub fn base_report(config: &Config) -> Result<()> {
     // get current month
 
     let month = NaiveDate::from(Local::now().date_naive()).month();

@@ -34,7 +34,7 @@ pub fn main_menu(config: &mut Config) -> Result<()> {
             match ans {
                 "Log Time" => log_time_menu(config)?,
                 "Projects" => projects_menu(config)?,
-                "Reports" => reports_menu()?,
+                "Reports" => reports_menu(config)?,
                 "Exit" => {
                     println!("Goodbye!");
                     break Ok(());
@@ -134,8 +134,8 @@ pub fn view_edit_menu(config:&mut Config) -> Result<()>{
 } */
 
 
-pub fn reports_menu() -> Result<()>{
+pub fn reports_menu(config: &Config) -> Result<()>{
     println!("TBD! Print some reports");
-    base_report();
+    base_report(config)?;
     return Ok(());
 }
