@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 //use std::intrinsics::unreachable;
 //use std::fmt::Display;
 use std::vec;
@@ -621,16 +622,29 @@ pub fn base_report(config: &Config) -> Result<()> {
     // get current month
 
     let month = NaiveDate::from(Local::now().date_naive()).month(); // Returns the month number starting from 1.
+    let year = NaiveDate::from(Local::now().date_naive()).year(); 
+
+    let mut totals = HashMap::new();
+    let mut total_pause_vec = Vec::new();
 
     println!("Month: {}", month);
 
-    let vec_of_projects: Vec<String> = config.project_records.iter().map(|p_code| p_code.code.clone()).collect();
+    for record in config.time_records.iter().filter(|r| {
+        r.date.month() == month && r.date.year() == year
+    }) {
+        for p_entry in &record.project_entries {
+            *totals.entry(p_entry.project_name.code.clone()).or_insert(0.0) += p_entry.hours
+        }
 
-    let relevant_t_records = config.time_records.iter().find(|t_record| t_record.date.month() == month);
+        total_pause_vec.push(record.pause_minutes);
+    };
 
-    // iterate over projects and hours of the current mont
+    let total_pause: f64 = total_pause_vec.iter().sum();
 
-    // format and print for each project
+    println!("Hour for {}/{}", month, year);
+    for (project, hours) in totals {
+        println!("Project: {}, Hours: {}", project, hours - total_pause)
+    };
 
     return Ok(());
 
