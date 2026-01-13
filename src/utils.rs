@@ -624,11 +624,14 @@ pub fn base_report(config: &Config) -> Result<()> {
     let month = NaiveDate::from(Local::now().date_naive()).month(); // Returns the month number starting from 1.
     let year = NaiveDate::from(Local::now().date_naive()).year(); 
 
+    // Initialize necessary vars
+
     let mut totals = HashMap::new();
     let mut total_pause_vec = Vec::new();
 
     println!("Month: {}", month);
 
+    // Iterate over relative TR and PE
     for record in config.time_records.iter().filter(|r| {
         r.date.month() == month && r.date.year() == year
     }) {
@@ -636,11 +639,15 @@ pub fn base_report(config: &Config) -> Result<()> {
             *totals.entry(p_entry.project_name.code.clone()).or_insert(0.0) += p_entry.hours
         }
 
+        // ToDo: Fing a better way
         total_pause_vec.push(record.pause_minutes);
     };
 
+    // Neet to get the total pauses of the month
+    // ToDo: This has to be easier
     let total_pause: f64 = total_pause_vec.iter().sum();
 
+    // Print the report
     println!("Hour for {}/{}", month, year);
     for (project, hours) in totals {
         println!("Project: {}, Hours: {}", project, hours - total_pause)
