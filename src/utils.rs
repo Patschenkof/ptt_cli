@@ -407,6 +407,14 @@ pub fn add_project(config: &mut Config)-> Result<()>{
 /// Returns:
 ///     Option<Project>
 pub fn find_project(projects: &[Project], code: &str) -> Option<Project> {
+    if code == "INT" {
+        return Some(Project{code: String::from("INT"), allocation: 0.0});
+    }
+
+    if code == "Vacation" {
+        return Some(Project { code: String::from("Vacation"), allocation: 0.0 });
+    }
+
     projects.iter().find(|p| p.code == code).cloned()
 }
 
