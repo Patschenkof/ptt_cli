@@ -650,7 +650,11 @@ pub fn base_report(config: &Config) -> Result<()> {
     // Print the report
     println!("Hour for {}/{}", month, year);
     for (project, hours) in totals {
-        println!("Project: {}, Hours: {}", project, hours - total_pause)
+        println!("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        println!("Project: {}", project);
+        println!("Assigned hours this month: {}", hours);
+        println!("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        println!("\n");
     };
 
     return Ok(());
