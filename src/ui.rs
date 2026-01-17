@@ -116,26 +116,8 @@ pub fn projects_menu(config: &mut Config) -> Result<()>{
 
 }
 
-/*
-pub fn view_edit_menu(config:&mut Config) -> Result<()>{
-    loop {
-        let options = vec!["Edit Workday", "Edit Project Entry", "Back", "Break"];
-        match Select::new("Vies / Edit Menu", options).prompt() {
-            Ok("Edit Workday") => edit_workday_record(config)?, 
-            Ok("Back") => break Ok(()),
-            Ok("Exit") => {
-                println!("Goodbye");
-                std::process::exit(0);
-            },
-            _=> continue,
-        }        
-    }
-
-} */
-
 
 pub fn reports_menu(config: &Config) -> Result<()>{
-    println!("TBD! Print some reports");
     base_report(config)?;
     return Ok(());
 }

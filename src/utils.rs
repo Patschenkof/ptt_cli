@@ -1,13 +1,10 @@
 use std::collections::HashMap;
-//use std::intrinsics::unreachable;
-//use std::fmt::Display;
 use std::vec;
 
 use chrono::{Datelike, Local, NaiveDate, NaiveTime, Weekday};
 use inquire::InquireError;
 use inquire::{CustomType, DateSelect, Select, Text, validator::Validation, Confirm};
 use crate::models::{TimeRecord, Project, ProjectEntry};
-//use crate::storage::*;
 use crate::models::*;
 use anyhow::{Context, Result, anyhow};
 
@@ -338,17 +335,6 @@ pub fn get_activity_hours(date: &NaiveDate, time_record: &Vec<TimeRecord>) -> Re
 
 }
 
-/// Prompts the user on how many hours he wants to assign to a specific task for a project
-/// DELETE?
-/*pub fn input_hours() -> Result<f64> {
-
-    let input: f64 = CustomType::new("How many hours would you like to assign?: ")
-        .with_error_message("Please provide a number like 0.5, 1.0, 2.5 etc.")
-        .prompt()?;
-
-    return Ok(input);
-
-}*/
 
 /// Asks the user for the Project information. Calls Config.add_project() to add data to permanent storage
 pub fn add_project(config: &mut Config)-> Result<()>{
@@ -607,24 +593,6 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
     return Ok(Some(proj_entry));
 }
 
-// Function iterates over the project codes of a set date. So the user will not be able to prompt a project code
-// where there are no entries to that specific date
-// DELETE?
-/*pub fn choose_project_for_date(time_records: &Vec<TimeRecord>, search_date: &NaiveDate, prompt: &str) -> Result<(String, TimeRecord)> {
-
-    if let Some(tr) = time_records.iter().find(|r| &r.date == search_date){
-
-        let vec_of_strings: Vec<String> = tr.project_entries.iter().map(|p|p.project_name.code.clone()).collect();
-
-        let project_code = Select::new(prompt, vec_of_strings).prompt()?;
-
-        return Ok((project_code, tr.clone()));
-    } else {
-        println!("An error occured. No entry for this date?");
-        return Err(anyhow!("No entry for this date"));
-    }
-
-}*/
 
 pub fn base_report(config: &Config) -> Result<()> {
     // get current month
@@ -636,8 +604,6 @@ pub fn base_report(config: &Config) -> Result<()> {
 
     let mut totals = HashMap::new();
     let mut total_pause_vec = Vec::new();
-
-    println!("Month: {}", month);
 
     // Iterate over relative TR and PE
     for record in config.time_records.iter().filter(|r| {
