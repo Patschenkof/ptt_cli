@@ -603,7 +603,7 @@ pub fn base_report(config: &Config) -> Result<()> {
     // Initialize necessary vars
 
     let mut totals = HashMap::new();
-    let mut total_pause_vec = Vec::new();
+    //let mut total_pause_vec = Vec::new();
 
     // Iterate over relative TR and PE
     for record in config.time_records.iter().filter(|r| {
@@ -614,12 +614,12 @@ pub fn base_report(config: &Config) -> Result<()> {
         }
 
         // ToDo: Fing a better way
-        total_pause_vec.push(record.pause_minutes);
+       // total_pause_vec.push(record.pause_minutes);
     };
 
     // Neet to get the total pauses of the month
     // ToDo: This has to be easier
-    let total_pause: f64 = total_pause_vec.iter().sum();
+    //let total_pause: f64 = total_pause_vec.iter().sum();
 
     // Print the report
     println!("Hour for {}/{}", month, year);
@@ -634,5 +634,22 @@ pub fn base_report(config: &Config) -> Result<()> {
     return Ok(());
 
 
+}
+
+/// Function to iterate over a given month a return every entry for a project and the hours
+/// assigned for this project
+fn filter_time_records(config: &Config, date: NaiveDate) -> Result<(HashMap<String,f64>)> {
+
+    let mut totals = HashMap::new();
+
+    for record in config.time_records.iter().filter(|r| {
+        r.date.month() == date.month() && r.date.year() == date.year()
+    }) {
+        for p_entry in &record.project_entries {
+            *totals.entry(p_entry.project_name.code.clone()).or_insert(0.0) += p_entry.hours
+        }
+    };
+
+    return Ok(totals);
 }
 
