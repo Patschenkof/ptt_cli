@@ -595,27 +595,8 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
 
 
 pub fn base_report(config: &Config) -> Result<()> {
-    // get current month
-
-    let month = NaiveDate::from(Local::now().date_naive()).month(); // Returns the month number starting from 1.
-    let year = NaiveDate::from(Local::now().date_naive()).year(); 
-
-    // Initialize necessary vars
-
-    //let mut totals = HashMap::new();
-
-    // Iterate over relative TR and PE
-    /*    
-    for record in config.time_records.iter().filter(|r| {
-        r.date.month() == month && r.date.year() == year
-    }) {
-        for p_entry in &record.project_entries {
-            *totals.entry(p_entry.project_name.code.clone()).or_insert(0.0) += p_entry.hours
-        }
-    }; */
 
     let totals = filter_time_records(config, NaiveDate::from(Local::now().date_naive()))?;
-
 
     // Print the report
     println!("Hour for {}/{}", month, year);
@@ -628,8 +609,6 @@ pub fn base_report(config: &Config) -> Result<()> {
     };
 
     return Ok(());
-
-
 }
 
 /// Function to iterate over a given month a return every entry for a project and the hours
