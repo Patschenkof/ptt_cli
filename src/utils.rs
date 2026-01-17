@@ -602,16 +602,20 @@ pub fn base_report(config: &Config) -> Result<()> {
 
     // Initialize necessary vars
 
-    let mut totals = HashMap::new();
+    //let mut totals = HashMap::new();
 
     // Iterate over relative TR and PE
+    /*    
     for record in config.time_records.iter().filter(|r| {
         r.date.month() == month && r.date.year() == year
     }) {
         for p_entry in &record.project_entries {
             *totals.entry(p_entry.project_name.code.clone()).or_insert(0.0) += p_entry.hours
         }
-    };
+    }; */
+
+    let totals = filter_time_records(config, NaiveDate::from(Local::now().date_naive()))?;
+
 
     // Print the report
     println!("Hour for {}/{}", month, year);
