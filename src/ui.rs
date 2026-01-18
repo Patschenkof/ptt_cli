@@ -118,6 +118,17 @@ pub fn projects_menu(config: &mut Config) -> Result<()>{
 
 
 pub fn reports_menu(config: &Config) -> Result<()>{
+    let options = vec!["Monthly Report", "Back", "Exit"];
+
     base_report(config)?;
-    return Ok(());
+
+    match Select::new("Reports menu", options).prompt() {
+        Ok("Monthly Report") => todo!(),
+        Ok("Back") => return Ok(()),
+        Ok("Exit") => {
+            println!("Goodbye!");
+            std::process::exit(0);
+        },
+        _ => unreachable!()
+    };
 }

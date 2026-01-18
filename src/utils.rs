@@ -597,10 +597,12 @@ pub fn choose_project(projects: &[Project], prompt: &str) -> Result<Option<Strin
 /// Tells the user the generall occupation of the month
 pub fn base_report(config: &Config) -> Result<()> {
 
-    let totals = filter_time_record_totals(config, NaiveDate::from(Local::now().date_naive()))?;
+    let date = NaiveDate::from(Local::now().date_naive());
+
+    let totals = filter_time_record_totals(config, date)?;
 
     // Print the report
-    println!("Hour for {}/{}", month, year);
+    println!("Hour for {}/{}", date.month(), date.year());
     for (project, hours) in totals {
         println!("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         println!("Project: {}", project);
@@ -614,7 +616,7 @@ pub fn base_report(config: &Config) -> Result<()> {
 
 /// Function to iterate over a given month a return every entry for a project and the hours
 /// assigned for this project
-fn filter_time_record_totals(config: &Config, date: NaiveDate) -> Result<(HashMap<String,f64>)> {
+fn filter_time_record_totals(config: &Config, date: NaiveDate) -> Result<HashMap<String,f64>> {
 
     let mut totals = HashMap::new();
 
