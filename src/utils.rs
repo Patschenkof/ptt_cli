@@ -631,3 +631,10 @@ fn filter_time_record_totals(config: &Config, date: NaiveDate) -> Result<HashMap
     return Ok(totals);
 }
 
+fn choose_year(config: &Config) -> Result<Option<str>> {
+    
+    let years_in_storage: Vec<&str> = config.time_records.iter().map(|r| r.date.year().to_string().clone()).collect();
+
+    years_in_storage.dedup();
+}
+
