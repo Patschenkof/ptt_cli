@@ -631,6 +631,7 @@ fn filter_time_record_totals(config: &Config, date: NaiveDate) -> Result<HashMap
     return Ok(totals);
 }
 
+/// Function to receive user input for a year he wants to have infomration for
 fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
     
     let mut years_in_storage: Vec<String> = config.time_records.iter().map(|r| r.date.year().to_string()).collect();
@@ -645,5 +646,36 @@ fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
         Some(year) => return Ok(Some(year)),
         None => return Ok(None)
     };
+}
+
+/// Function to receive user input for a month he want the information for
+/// year should only 
+fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<String>> {
+
+    // Iterate over all of TimeRecords and get all the months in storage
+    let month_in_storage: Vec<u32> = config.time_records
+        .iter()
+        .filter(|r| {
+            r.date.year() == year
+        })
+        .map(|r| r.date.month())
+        .collect();
+
+    // Sort and deduplicate
+    month_in_storage.sort_by(|a,b| b.cmp(a));
+    month_in_storage.dedup();
+
+    // Transform into actual month names
+    let month_in_storage = month_in_storage
+        .iter()
+        .map(|m| {
+            let name = NaiveDate::from_ymd_opt(year, *m, d)
+            .unwrap()
+            .format("%B")
+            .to_string();
+            name
+        })
+        .collect();
+
 }
 
