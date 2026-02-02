@@ -677,5 +677,12 @@ fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<Strin
         })
         .collect();
 
+    let selection = Select::new(prompt, month_in_storage).prompt_skippable()?;
+
+    match selection {
+        Some(selection) => Ok(Some(selection)),
+        None => Ok(None)
+    }
+
 }
 
