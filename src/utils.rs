@@ -653,7 +653,7 @@ fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
 fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<String>> {
 
     // Iterate over all of TimeRecords and get all the months in storage
-    let month_in_storage: Vec<u32> = config.time_records
+    let mut month_in_storage: Vec<u32> = config.time_records
         .iter()
         .filter(|r| {
             r.date.year() == year
@@ -669,7 +669,7 @@ fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<Strin
     let month_in_storage = month_in_storage
         .iter()
         .map(|m| {
-            let name = NaiveDate::from_ymd_opt(year, *m, d)
+            let name = NaiveDate::from_ymd_opt(year, *m, 1)
             .unwrap()
             .format("%B")
             .to_string();
@@ -683,6 +683,5 @@ fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<Strin
         Some(selection) => Ok(Some(selection)),
         None => Ok(None)
     }
-
 }
 
