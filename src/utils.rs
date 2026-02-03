@@ -616,9 +616,11 @@ pub fn base_report(config: &Config) -> Result<()> {
 
 /// Function to iterate over a given month a return every entry for a project and the hours
 /// assigned for this project
-fn filter_time_record_totals(config: &Config, date: NaiveDate) -> Result<HashMap<String,f64>> {
+fn filter_time_record_totals(config: &Config, year: String, month: String) -> Result<HashMap<String,f64>> {
 
     let mut totals = HashMap::new();
+
+    let date = NaiveDate::from_ymd_opt(year as i32, month, day)
 
     for record in config.time_records.iter().filter(|r| {
         r.date.month() == date.month() && r.date.year() == date.year()
@@ -650,10 +652,12 @@ fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
 
 /// Function to receive user input for a month he want the information for
 /// year should only 
-fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<String>> {
+fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<u32>> {
+
+    // Consider using a struct instead, holding month name and numer.
 
     // Iterate over all of TimeRecords and get all the months in storage
-    let mut month_in_storage: Vec<u32> = config.time_records
+    let mut month_in_storage_numerical: Vec<u32> = config.time_records
         .iter()
         .filter(|r| {
             r.date.year() == year
@@ -662,11 +666,11 @@ fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<Strin
         .collect();
 
     // Sort and deduplicate
-    month_in_storage.sort_by(|a,b| b.cmp(a));
-    month_in_storage.dedup();
+    month_in_storage_numerical.sort_by(|a,b| b.cmp(a));
+    month_in_storage_numerical.dedup();
 
     // Transform into actual month names
-    let month_in_storage = month_in_storage
+    let month_in_storage_string: Vec<String> = month_in_storage_numerical
         .iter()
         .map(|m| {
             let name = NaiveDate::from_ymd_opt(year, *m, 1)
@@ -676,12 +680,22 @@ fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<Strin
             name
         })
         .collect();
+    
+    // Get user selection
+    let selection = Select::new(prompt, month_in_storage_string.clone())
+        .prompt_skippable()?;
 
-    let selection = Select::new(prompt, month_in_storage).prompt_skippable()?;
+    let selected_month = match selection {
+        Some(selection) => selection,
+        None => return Ok(None),
+    };
 
-    match selection {
-        Some(selection) => Ok(Some(selection)),
-        None => Ok(None)
-    }
+    // Turn back into usize
+    let index = month_in_storage_string
+        .iter()
+        .position(|m| m == &selected_month)
+        .with_context(|| format!("An error occurd! Month {}, could not be found", selected_month))?;
+
+    Ok(Some(month_in_storage_numerical[index]))
 }
 
