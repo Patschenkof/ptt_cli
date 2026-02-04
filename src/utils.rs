@@ -686,55 +686,12 @@ fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<Month
             let selected = month_in_storage
                 .iter()
                 .find(|m| m.month_name == month)
+                .cloned()
                 .with_context(|| format!("Month {} not found", month))?;
             return Ok(Some(selected));
         },
         None => return Ok(None)
     }
 
-
-    //-------------------------- old -------------------------------
-
-    // Iterate over all of TimeRecords and get all the months in storage
-    let mut month_in_storage_numerical: Vec<u32> = config.time_records
-        .iter()
-        .filter(|r| {
-            r.date.year() == year
-        })
-        .map(|r| r.date.month())
-        .collect();
-
-    // Sort and deduplicate
-    month_in_storage_numerical.sort_by(|a,b| b.cmp(a));
-    month_in_storage_numerical.dedup();
-
-    // Transform into actual month names
-    let month_in_storage_string: Vec<String> = month_in_storage_numerical
-        .iter()
-        .map(|m| {
-            let name = NaiveDate::from_ymd_opt(year, *m, 1)
-            .unwrap()
-            .format("%B")
-            .to_string();
-            name
-        })
-        .collect();
-    
-    // Get user selection
-    let selection = Select::new(prompt, month_in_storage_string.clone())
-        .prompt_skippable()?;
-
-    let selected_month = match selection {
-        Some(selection) => selection,
-        None => return Ok(None),
-    };
-
-    // Turn back into usize
-    let index = month_in_storage_string
-        .iter()
-        .position(|m| m == &selected_month)
-        .with_context(|| format!("An error occurd! Month {}, could not be found", selected_month))?;
-
-    Ok(Some(month_in_storage_numerical[index]))
 }
 

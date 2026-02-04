@@ -242,7 +242,7 @@ impl Config{
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct MonthChoice {
     pub month_name: String,
     pub month_number: u32,
