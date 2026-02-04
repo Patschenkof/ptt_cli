@@ -241,3 +241,8 @@ impl Config{
         //todo: File names will be inferred by config
     }
 }
+
+pub struct MonthChoice {
+    month_name: String,
+    month_number: u32,
+}
