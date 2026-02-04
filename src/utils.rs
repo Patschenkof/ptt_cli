@@ -652,7 +652,7 @@ fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
 
 /// Function to receive user input for a month he want the information for
 /// year should only 
-fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<u32>> {
+fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<MonthChoice>> {
 
     // Consider using a struct instead, holding month name and numer.
     let mut month_in_storage = BTreeSet::new();
@@ -672,6 +672,25 @@ fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<u32>>
             }
         })
         .collect();
+
+    let month_options = month_in_storage
+        .iter()
+        .map(|m| m.month_name.clone())
+        .collect();
+
+    let selection = Select::new(prompt, month_options)
+        .prompt_skippable()?;
+
+    match selection {
+        Some(month) => {
+            let selected = month_in_storage
+                .iter()
+                .find(|m| m.month_name == month)
+                .with_context(|| format!("Month {} not found", month))?;
+            return Ok(Some(selected));
+        },
+        None => return Ok(None)
+    }
 
 
     //-------------------------- old -------------------------------
