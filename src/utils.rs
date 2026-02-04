@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeSet};
 use std::vec;
 
 use chrono::{Datelike, Local, NaiveDate, NaiveTime, Weekday};
@@ -655,6 +655,26 @@ fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
 fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<u32>> {
 
     // Consider using a struct instead, holding month name and numer.
+    let mut month_in_storage = BTreeSet::new();
+
+    month_in_storage = config.time_records
+        .iter()
+        .filter(|r| {
+            r.date.year() == year
+        })
+        .map(|r| {
+            MonthChoice {
+                month_name: NaiveDate::from_ymd_opt(year, r.date.month(), 1)
+                    .unwrap()
+                    .format("%B")
+                    .to_string(),
+                month_number: r.date.month()
+            }
+        })
+        .collect();
+
+
+    //-------------------------- old -------------------------------
 
     // Iterate over all of TimeRecords and get all the months in storage
     let mut month_in_storage_numerical: Vec<u32> = config.time_records

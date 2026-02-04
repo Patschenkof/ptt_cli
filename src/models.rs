@@ -243,6 +243,6 @@ impl Config{
 }
 
 pub struct MonthChoice {
-    month_name: String,
-    month_number: u32,
+    pub month_name: String,
+    pub month_number: u32,
 }
