@@ -1,4 +1,4 @@
-use std::collections::{HashMap, BTreeSet};
+use std::collections::{HashMap, HashSet, BTreeSet};
 use std::vec;
 
 use chrono::{Datelike, Local, NaiveDate, NaiveTime, Weekday};
@@ -635,14 +635,18 @@ fn filter_time_record_totals(config: &Config, year: String, month: String) -> Re
 
 /// Function to receive user input for a year he wants to have infomration for
 fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
-    
-    let mut years_in_storage: Vec<String> = config.time_records.iter().map(|r| r.date.year().to_string()).collect();
 
-    years_in_storage.sort_by(|a,b| b.cmp(a));
-    years_in_storage.dedup();
+    let mut years_in_storage = BTreeSet::new();
+    
+    years_in_storage = config.time_records.iter().map(|r| r.date.year()).collect();
     
 
-    let entry = Select::new(prompt, years_in_storage).prompt_skippable()?;
+    let entry = Select::new(prompt, years_in_storage
+            .iter()
+            .map(|m| m.to_string())
+            .collect()
+        )
+        .prompt_skippable()?;
 
     match entry {
         Some(year) => return Ok(Some(year)),
