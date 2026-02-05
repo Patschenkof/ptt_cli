@@ -634,7 +634,7 @@ fn filter_time_record_totals(config: &Config, year: String, month: String) -> Re
 }
 
 /// Function to receive user input for a year he wants to have infomration for
-fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
+fn choose_year(config: &Config, prompt: &str) -> Result<Option<i32>> {
 
     let mut years_in_storage = BTreeSet::new();
     
@@ -649,7 +649,13 @@ fn choose_year(config: &Config, prompt: &str) -> Result<Option<String>> {
         .prompt_skippable()?;
 
     match entry {
-        Some(year) => return Ok(Some(year)),
+        Some(year) => {
+            let year_i32 = year.parse::<i32>()
+                .with_context(|| {
+                    format!("Could not parse year to i32")
+                })?;
+            return Ok(Some(year_i32));
+        },
         None => return Ok(None)
     };
 }
