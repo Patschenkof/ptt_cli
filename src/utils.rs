@@ -749,5 +749,5 @@ pub fn monthly_report(config: &Config) -> Result<()> {
         &NaiveDate::from_ymd_opt(year_choice, month_choice.month_number, 1).unwrap()
     );
 
-    Ok(())
+    return Ok(());
 }

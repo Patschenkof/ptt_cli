@@ -123,7 +123,7 @@ pub fn reports_menu(config: &Config) -> Result<()>{
     base_report(config)?;
 
     match Select::new("Reports menu", options).prompt() {
-        Ok("Monthly Report") => todo!(),
+        Ok("Monthly Report") => monthly_report(config)?,
         Ok("Back") => return Ok(()),
         Ok("Exit") => {
             println!("Goodbye!");
