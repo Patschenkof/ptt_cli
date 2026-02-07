@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet, BTreeSet};
+use std::collections::{HashMap, BTreeSet};
 use std::vec;
 
 use chrono::{Datelike, Local, NaiveDate, NaiveTime, Weekday};
@@ -599,7 +599,7 @@ pub fn base_report(config: &Config) -> Result<()> {
 
     let date = NaiveDate::from(Local::now().date_naive());
 
-    let totals = filter_time_record_totals(config, date)?;
+    let totals = filter_time_record_totals(config, date.year(), date.month())?;
 
     // Print the report
     println!("Hour for {}/{}", date.month(), date.year());
@@ -616,11 +616,11 @@ pub fn base_report(config: &Config) -> Result<()> {
 
 /// Function to iterate over a given month a return every entry for a project and the hours
 /// assigned for this project
-fn filter_time_record_totals(config: &Config, year: String, month: String) -> Result<HashMap<String,f64>> {
+fn filter_time_record_totals(config: &Config, year: i32, month: u32) -> Result<HashMap<String,f64>> {
 
     let mut totals = HashMap::new();
 
-    let date = NaiveDate::from_ymd_opt(year as i32, month, day)
+    let date = NaiveDate::from_ymd_opt(year, month, 1).unwrap();
 
     for record in config.time_records.iter().filter(|r| {
         r.date.month() == date.month() && r.date.year() == date.year()
@@ -705,3 +705,49 @@ fn choose_month(config: &Config, prompt: &str, year: i32) -> Result<Option<Month
 
 }
 
+fn print_report(totals: HashMap<String,f64>, date: &NaiveDate) -> Result<()> {
+
+    println!("Hour for {}/{}", date.month(), date.year());
+    for (project, hours) in totals {
+        println!("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        println!("Project: {}", project);
+        println!("Assigned hours this month: {}", hours);
+        println!("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        println!("\n");
+    };
+
+    Ok(())
+
+}
+
+pub fn monthly_report(config: &Config) -> Result<()> {
+
+    let year_prompt = "Please choose a year for the report";
+    let month_prompt = "Please choose a month for the report";
+
+    let year_choice = match choose_year(config, year_prompt) {
+        Ok(Some(year)) => year,
+        Ok(None) => {
+            println!("Operation cancelled. Returning to main...");
+            return Ok(());
+        },
+        Err(e) => return Err(e),
+    };
+
+    let month_choice = match choose_month(config, month_prompt, year_choice) {
+        Ok(Some(month)) => month,
+        Ok(None) => {
+            println!("Operation cancelled. Returning to main...");
+            return Ok(());
+        },
+        Err(e) => return Err(e),
+    };
+
+    let totals = filter_time_record_totals(config, year_choice, month_choice.month_number)?;
+
+    print_report(totals, 
+        &NaiveDate::from_ymd_opt(year_choice, month_choice.month_number, 1).unwrap()
+    );
+
+    Ok(())
+}
