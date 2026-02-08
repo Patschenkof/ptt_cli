@@ -747,7 +747,7 @@ pub fn monthly_report(config: &Config) -> Result<()> {
 
     print_report(totals, 
         &NaiveDate::from_ymd_opt(year_choice, month_choice.month_number, 1).unwrap()
-    );
+    )?;
 
     return Ok(());
 }

@@ -118,17 +118,18 @@ pub fn projects_menu(config: &mut Config) -> Result<()>{
 
 
 pub fn reports_menu(config: &Config) -> Result<()>{
-    let options = vec!["Monthly Report", "Back", "Exit"];
-
     base_report(config)?;
 
-    match Select::new("Reports menu", options).prompt() {
-        Ok("Monthly Report") => monthly_report(config)?,
-        Ok("Back") => return Ok(()),
-        Ok("Exit") => {
-            println!("Goodbye!");
-            std::process::exit(0);
-        },
-        _ => unreachable!()
-    };
+    loop {
+        let options = vec!["Monthly Report", "Back", "Exit"];
+        match Select::new("Reports menu", options).prompt() {
+            Ok("Monthly Report") => monthly_report(config)?,
+            Ok("Back") => break Ok(()),
+            Ok("Exit") => {
+                println!("Goodbye!");
+                std::process::exit(0);
+            },
+            _ => unreachable!()
+        }       
+    }
 }

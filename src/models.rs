@@ -249,7 +249,7 @@ pub struct MonthChoice {
 }
 
 impl PartialOrd for MonthChoice {
-    fn partial_cmp(&self, other: &self) -> Option<std::cmp::Ordering> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         self.month_number.partial_cmp(&other.month_number)
     }
 }
